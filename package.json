@@ -1,0 +1,11 @@
+{
+  "name": "wdc-confluence",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {},
+  "author": "Sebastian Blasetti",
+  "license": "MIT",
+  "devDependencies": {},
+  "dependencies": {}
+}
