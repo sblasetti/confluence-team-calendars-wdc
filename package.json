@@ -3,9 +3,13 @@
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
-  "scripts": {},
+  "scripts": {
+    "init": "symlink-dir shared connector/src/shared && symlink-dir shared proxy/src/shared"
+  },
   "author": "Sebastian Blasetti",
   "license": "MIT",
-  "devDependencies": {},
+  "devDependencies": {
+    "symlink-dir": "~1.1.3"
+  },
   "dependencies": {}
 }
