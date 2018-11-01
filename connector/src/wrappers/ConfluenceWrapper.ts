@@ -1,5 +1,6 @@
 import * as FormatUtils from '../utils/FormatUtils';
 import 'whatwg-fetch';
+import _ from 'lodash';
 
 export function getEvents(options: IEventsOptions): Promise<any[]> {
     // TODO: input data
@@ -41,14 +42,18 @@ export function getEvents(options: IEventsOptions): Promise<any[]> {
  * @param onResponseCallback Callback function for a successful response.
  * @param onErrorCallback Callback function for an error.
  */
-export function validateCredentials(options: IValidateCredentialsOptions): Promise<boolean> {
-    const getUserUrl: string = `${options.HostUrl}/rest/api/user?username=${options.Credentials.Username}`;
-    const getUserOptions: RequestInit = {
+export function validateCredentials(options: IValidateCredentialsRequest): Promise<IValidateCredentialsResponse> {
+    const validateCredentialsUrl: string = 'http://localhost:8008/auth/validate';
+    const validateCredentialsOptions: RequestInit = {
         headers: {
-            Authorization: buildAuthHeaderValue(options.Credentials)
-        }
+            'Authorization': buildAuthHeaderValue(options.Credentials),
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+        },
+        method: 'POST',
+        body: JSON.stringify(options)
     };
-    return fetch(getUserUrl, getUserOptions)
+    return fetch(validateCredentialsUrl, validateCredentialsOptions)
         .then(handleResponse)
         .then(buildOutput)
         .catch(handleError);
@@ -57,19 +62,20 @@ export function validateCredentials(options: IValidateCredentialsOptions): Promi
         return Promise.reject(error);
     }
 
-    function buildOutput(data: any): Promise<boolean> {
-        let valid: boolean = false;
-        if (data.type === 'known') {
-            valid = true;
-        }
-        return Promise.resolve(valid);
+    function buildOutput(data: any): Promise<IValidateCredentialsResponse> {
+        // TODO: add some kind of mapper?
+        return Promise.resolve({
+            valid: _.get(data, 'valid', false),
+            error: _.get(data, 'error')
+        });
     }
 
-    function handleResponse(res: Response): Promise<any> {
-        if (res && res.status && res.status === 200 && res.body) {
-            return res.json();
+    function handleResponse<T>(res: Response): Promise<any> {
+        if (_.get(res, 'status') === 200) {
+            // TODO: handle error
+            return res.json<T>();
         }
-        throw new Error('Invalid response');
+        throw new Error('An error occurred. Please try again.');
     }
 }
 

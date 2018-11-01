@@ -10,7 +10,7 @@ const mockCredentials: ICredentials = {
     Username: 'test',
     Password: '1234'
 };
-const mockValidateCredentialsOptions: IValidateCredentialsOptions = {
+const mockValidateCredentialsRequest: IValidateCredentialsRequest = {
     Credentials: mockCredentials,
     HostUrl: 'https://www.test.com'
 };
@@ -23,10 +23,10 @@ describe('ConfluenceWrapper should use the Confluence API correctly', () => {
 
     it('validateCredentials() requests one space from the API', () => {
         // Given
-        const { HostUrl } = mockValidateCredentialsOptions;
+        const { HostUrl } = mockValidateCredentialsRequest;
 
         // When
-        validateCredentials(mockValidateCredentialsOptions);
+        validateCredentials(mockValidateCredentialsRequest);
 
         // Then
         const calls: any[][] = fetch.mock.calls;
@@ -36,7 +36,7 @@ describe('ConfluenceWrapper should use the Confluence API correctly', () => {
         const secondArgument: any = calls[0][1];
         expect(typeof firstArgument).toBe('string'); // first argument type
         expect(typeof secondArgument).toBe('object'); // second argument type
-        expect(firstArgument).toBe(`${HostUrl}/rest/api/user?username=${mockValidateCredentialsOptions.Credentials.Username}`); // first argument is the URL
+        expect(firstArgument).toBe('http://localhost:8008/auth/validate'); // first argument is the URL
         expect(secondArgument).toHaveProperty('headers'); // second argument is the headers
         expect(secondArgument.headers).toHaveProperty('Authorization'); // headers have credentials
     });

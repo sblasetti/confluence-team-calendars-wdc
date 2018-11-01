@@ -111,13 +111,13 @@ export function finish(): void {
 function authenticate(): void {
     const connectionData: IConnectionData = UIHelper.getConnectionDataFromUI();
     const credentials: ICredentials = UIHelper.getCredentialsFromUI();
-    const options: IValidateCredentialsOptions = {
+    const options: IValidateCredentialsRequest = {
         Credentials: credentials,
         HostUrl: connectionData.HostUrl
     };
     ConfluenceWrapper.validateCredentials(options)
-        .then((valid: boolean) => {
-            if (valid) {
+        .then((validateResponse: IValidateCredentialsResponse) => {
+            if (validateResponse.valid) {
                 // If OK store password
                 UIHelper.saveCredentialsFromUI();
                 // Store connectionData in auth phase too because the host URL 

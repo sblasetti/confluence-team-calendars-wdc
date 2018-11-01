@@ -4,11 +4,10 @@
     },
     "collectCoverage": false,
     "collectCoverageFrom": [
-        "src/connector/**/*.{ts,tsx}",
-        "src/proxy/**/*.{ts,tsx}",
+        "src/**/*.{ts,tsx}",
         "!**/*.d.ts"
     ],
-    "testRegex": "(/src/.+/.*\\.test)\\.(tsx?)$",
+    "testRegex": "(/src/.*\\.test)\\.(tsx?)$",
     "moduleFileExtensions": [
         "ts",
         "tsx",
