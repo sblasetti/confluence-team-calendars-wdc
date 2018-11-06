@@ -9,8 +9,11 @@ app.use(express.json());
 
 // Allowing CORS
 // TODO: replace * with connector domain
-app.use((req, res, next) => {
+app.use(function(req, res, next) {
+    console.log("---");
+    console.log("set CORS header");
     res.header("Access-Control-Allow-Origin", "*");
+    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
     next();
 });
 
