@@ -1,4 +1,4 @@
-# Confluence Calendars WDC
+# Team Calendars for Confluence WDC (in development)
 
 ## Introduction
 
