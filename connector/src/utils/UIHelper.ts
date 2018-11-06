@@ -30,18 +30,8 @@ export function getCredentialsFromUI(): ICredentials {
     };
 }
 
-export function saveCredentialsFromUI(): void {
-    const cred: ICredentials = getCredentialsFromUI();
-    TableauWrapper.setUsername(cred.Username);
-    TableauWrapper.setPassword(cred.Password);
-}
-
-export function saveConnectionDataFromUI(): void {
-    const connectionData: IConnectionData = getConnectionDataFromUI();
-    TableauWrapper.setConnectionData(connectionData);
-}
-
 export function populateConnectionDataIfAvailable(): void {
+    // TODO: remove this wrapper
     const data: string = TableauWrapper.getConnectionData();
     let isValid: boolean = false;
     let connectionData: any;

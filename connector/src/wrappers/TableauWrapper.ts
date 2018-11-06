@@ -14,9 +14,21 @@ export function abortWithError(msg: string): void {
     return tableau.abortWithError(msg);
 }
 
+export function log(msg: string): void {
+    tableau.log(msg);
+}
+
 //#region Utility methods
 export function isAuthenticated(): boolean {
     return !!getPassword();
+}
+
+export function canStoreCredentials(): boolean {
+    return getPhase() === tableau.phaseEnum.authPhase || getPhase() === tableau.phaseEnum.interactivePhase;
+}
+
+export function canStoreConnectionData(): boolean {
+    return getPhase() !== tableau.phaseEnum.authPhase;
 }
 //#endregion
 
@@ -35,6 +47,9 @@ export function getUsername(): string {
 }
 export function setUsername(value: string): void {
     tableau.username = value;
+}
+export function setUsernameAlias(value: string): void {
+    tableau.usernameAlias = value;
 }
 export function getPassword(): string {
     return tableau.password;

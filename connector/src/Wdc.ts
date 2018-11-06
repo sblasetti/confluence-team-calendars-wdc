@@ -31,10 +31,13 @@ function buildEventsRequest(connectionData: IConnectionData): IEventsOptions {
 
 function init(initCallback: tableau.InitCallback): void {
     TableauWrapper.setAuthType(tableau.authTypeEnum.custom);
-    initCallback();
+    TableauWrapper.setConnectionName("Team Calendars for Confluence");
 
     // Load data (if available)
+    // TODO: get connectiondata and then decide
     UIHelper.populateConnectionDataIfAvailable();
+
+    initCallback();
 
     // Show UI depending on phase and auth state
     // TODO: is this the right place?
@@ -92,46 +95,51 @@ function shutdown(): void {
 
 export function finish(): void {
     // TODO: input validations
-    // Called both in auth and in interactive phases
-    switch (TableauWrapper.getPhase()) {
-        case tableau.phaseEnum.authPhase:
-        case tableau.phaseEnum.interactivePhase:
-            // If not authenticated it will try to validate input credentials
-            if (!TableauWrapper.isAuthenticated()) {
-                // Try to get data from the server
-                authenticate();
-            }
-            break;
-        default:
-            // Do nothing
-            break;
-    }
+
+    Promise.resolve()
+        .then(() => !TableauWrapper.isAuthenticated() ? performAuthentication() : Promise.resolve())
+        .then(() => TableauWrapper.submit())
+        .catch((e: any) => {
+            // TODO: proper handling
+            TableauWrapper.log(`ERROR: ${e}`);
+            alert(e);
+        });
 }
 
-function authenticate(): void {
-    const connectionData: IConnectionData = UIHelper.getConnectionDataFromUI();
-    const credentials: ICredentials = UIHelper.getCredentialsFromUI();
-    const options: IValidateCredentialsRequest = {
-        Credentials: credentials,
-        HostUrl: connectionData.HostUrl
-    };
-    ConfluenceWrapper.validateCredentials(options)
+function performAuthentication(): Promise<void> {
+    // return new Promise((resolve: () => void, reject: (reason: string) => void): void => {
+        const connectionData: IConnectionData = UIHelper.getConnectionDataFromUI();
+        const credentials: ICredentials = UIHelper.getCredentialsFromUI();
+        const options: IValidateCredentialsRequest = {
+            Credentials: credentials,
+            HostUrl: connectionData.HostUrl
+        };
+    
+        return ConfluenceWrapper.validateCredentials(options)
         .then((validateResponse: IValidateCredentialsResponse) => {
             if (validateResponse.valid) {
-                // If OK store password
-                UIHelper.saveCredentialsFromUI();
-                // Store connectionData in auth phase too because the host URL 
-                // value is stored there and it is part of the auth UI
-                UIHelper.saveConnectionDataFromUI();
-                TableauWrapper.setConnectionName("Confluence Calendars");
-                TableauWrapper.setUsername(credentials.Username);
-                TableauWrapper.setPassword(credentials.Password);
-                TableauWrapper.submit();
+                if (TableauWrapper.canStoreCredentials()) {
+                    // If OK store password
+                    const uiCredentials: ICredentials = UIHelper.getCredentialsFromUI();
+                    TableauWrapper.setUsername(uiCredentials.Username);
+                    TableauWrapper.setUsernameAlias(uiCredentials.Username);
+                    TableauWrapper.setPassword(uiCredentials.Password);
+                }
+
+                if (TableauWrapper.canStoreConnectionData()) {
+                    // Store connectionData in auth phase too because the host URL 
+                    // value is stored there and it is part of the auth UI
+                    const uiConnectionData: IConnectionData = UIHelper.getConnectionDataFromUI();
+                    TableauWrapper.setConnectionData(uiConnectionData);
+                }
+
+                // resolve();
             }
             else {
-                alert('Invalid credentials');
+                // reject('Invalid credentials');
             }
         }).catch(() => {
-            alert('Invalid credentials');
+            // reject('Error on authentication');
         });
+    // });
 }
