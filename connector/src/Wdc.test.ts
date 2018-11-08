@@ -1,8 +1,9 @@
 import * as TestUtils from "./TestUtils";
-import * as Wdc from "./Wdc";
+import { Wdc } from "./Wdc";
 import * as UIHelper from "./utils/UIHelper";
 import * as TableauWrapper from "./wrappers/TableauWrapper";
 
+let wdc: Wdc;
 const mockWdc: tableau.WebDataConnector = TestUtils.buildWdcMock();
 let mockIsAuthenticated: boolean = false;
 jest.mock("./wrappers/TableauWrapper", () => { 
@@ -29,13 +30,17 @@ jest.mock("./wrappers/ConfluenceWrapper");
 
 TestUtils.mockGlobal();
 
+beforeEach(() => {
+    wdc = new Wdc();
+});
+
 describe("Wdc", () => {
     test("finish() on auth phase and user is authenticated", () => {
         // Given
         mockIsAuthenticated = true;
         
         // When
-        Wdc.finish();
+        wdc.finish();
 
         // Then
         expect(TableauWrapper.getPhase).toHaveBeenCalledTimes(1);
@@ -46,12 +51,12 @@ describe("Wdc", () => {
 
     test('buildWdc() should contain the methods that WDC needs', () => {
         // When
-        const wdc: tableau.WebDataConnector = Wdc.buildWdc();
+        const connector: tableau.WebDataConnector = wdc.buildWdc();
 
         // Then
-        expect(wdc).toHaveProperty('init');
-        expect(wdc).toHaveProperty('getData');
-        expect(wdc).toHaveProperty('getSchema');
-        expect(wdc).toHaveProperty('shutdown');
+        expect(connector).toHaveProperty('init');
+        expect(connector).toHaveProperty('getData');
+        expect(connector).toHaveProperty('getSchema');
+        expect(connector).toHaveProperty('shutdown');
     });
 });

@@ -33,6 +33,9 @@ export function canStoreConnectionData(): boolean {
 //#endregion
 
 //#region Properties
+export function getConnectionName(): string {
+    return tableau.connectionName;
+}
 export function setConnectionName(value: string): void {
     tableau.connectionName = value;
 }
