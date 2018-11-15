@@ -1,20 +1,27 @@
 import * as TestUtils from "./TestUtils";
-import { Wdc } from "./Wdc";
+import Wdc from "./Wdc";
 import * as UIHelper from "./utils/UIHelper";
 import * as TableauWrapper from "./wrappers/TableauWrapper";
 
-let wdc: Wdc;
 const mockWdc: tableau.WebDataConnector = TestUtils.buildWdcMock();
+
+// TODO: to avoid declaring all mocked methods, explore https://stackoverflow.com/questions/48759035/mock-dependency-in-jest-with-typescript
 let mockIsAuthenticated: boolean = false;
 jest.mock("./wrappers/TableauWrapper", () => { 
     return {
         makeConnector: jest.fn(() => mockWdc),
-        getPhase: jest.fn().mockReturnValue("auth"),
+        getPhase: jest.fn(),
         registerConnector: jest.fn(),
         isAuthenticated: jest.fn(() => mockIsAuthenticated),
         setConnectionName: jest.fn(),
         setConnectionData: jest.fn(),
-        submit: jest.fn()
+        setUsername: jest.fn(),
+        setUsernameAlias: jest.fn(),
+        setPassword: jest.fn(),
+        submit: jest.fn(),
+        log: jest.fn(),
+        canStoreCredentials: jest.fn(() => true),
+        canStoreConnectionData: jest.fn(() => true)
     };
 });
 
@@ -26,32 +33,58 @@ jest.mock("./utils/UIHelper", () => {
     };
 });
 jest.mock("./utils/HtmlUtils");
-jest.mock("./wrappers/ConfluenceWrapper");
+const mockValidateCredentialsResponse: IValidateCredentialsResponse = { 
+    valid: true, 
+    error: "" 
+};
+jest.mock("./wrappers/ConfluenceWrapper", () => {
+    return {
+        validateCredentials: jest.fn(() => Promise.resolve(mockValidateCredentialsResponse))
+    };
+});
 
 TestUtils.mockGlobal();
 
-beforeEach(() => {
-    wdc = new Wdc();
+afterEach(() => {
+    jest.clearAllMocks();
 });
 
 describe("Wdc", () => {
-    test("finish() on auth phase and user is authenticated", () => {
+    test("finish() when the user is authenticated", async () => {
         // Given
         mockIsAuthenticated = true;
-        
+
         // When
-        wdc.finish();
+        await Wdc.finish();
 
         // Then
-        expect(TableauWrapper.getPhase).toHaveBeenCalledTimes(1);
+        expect(TableauWrapper.log).toHaveBeenCalledTimes(0); // no errors
+        expect(TableauWrapper.isAuthenticated).toHaveBeenCalledTimes(1);
         expect(UIHelper.getConnectionDataFromUI).toHaveBeenCalledTimes(0);
+        expect(UIHelper.getCredentialsFromUI).toHaveBeenCalledTimes(0);
         expect(TableauWrapper.setConnectionData).toHaveBeenCalledTimes(0);
-        expect(TableauWrapper.submit).toHaveBeenCalledTimes(0);
+        expect(TableauWrapper.submit).toHaveBeenCalledTimes(1);
+    });
+
+    test("finish() when the user is NOT authenticated", async () => {
+        // Given
+        mockIsAuthenticated = false;
+        
+        // When
+        await Wdc.finish();
+
+        // Then
+        expect(TableauWrapper.log).toHaveBeenCalledTimes(0); // no errors
+        expect(TableauWrapper.isAuthenticated).toHaveBeenCalledTimes(1);
+        expect(UIHelper.getConnectionDataFromUI).toHaveBeenCalledTimes(1);
+        expect(UIHelper.getCredentialsFromUI).toHaveBeenCalledTimes(1);
+        expect(TableauWrapper.setConnectionData).toHaveBeenCalledTimes(1);
+        expect(TableauWrapper.submit).toHaveBeenCalledTimes(1);
     });
 
     test('buildWdc() should contain the methods that WDC needs', () => {
         // When
-        const connector: tableau.WebDataConnector = wdc.buildWdc();
+        const connector: tableau.WebDataConnector = Wdc.buildWdc();
 
         // Then
         expect(connector).toHaveProperty('init');
