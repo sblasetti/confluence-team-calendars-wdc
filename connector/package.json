@@ -7,7 +7,8 @@
     "build": "webpack",
     "lint": "tslint -c tslint.json 'src/*.{ts,tsx}' -e 'src/*.d.ts'",
     "pretest": "npm run lint",
-    "test": "jest -c jest.config.json --coverage",
+    "test": "jest -c jest.config.json",
+    "test-cov": "jest -c jest.config.json --coverage",
     "test-w": "jest -c jest.config.json --watchAll",
     "start": "npm run build && http-server ./dist -p 3003 -c-1",
     "dep-validate": "depcruise --validate .dependency-cruiser.json src"
