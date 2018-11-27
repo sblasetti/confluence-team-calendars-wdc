@@ -7,6 +7,11 @@ declare global {
     }
 
     // tslint:disable-next-line:class-name interface-name
+    interface JQuery<TElement = HTMLElement> extends Iterable<TElement> {
+        modal(opt: string): void;
+    }
+
+    // tslint:disable-next-line:class-name interface-name
     interface Window {
         Promise: PromiseConstructor;
     }

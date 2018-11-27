@@ -99,7 +99,7 @@ function performAuthentication(): Promise<void> {
             if (validateResponse.valid === true) {
                 if (TableauWrapper.canStoreCredentials()) {
                     // If OK store password
-                    TableauWrapper.setUsername(uiCredentials.Username);
+                    TableauWrapper.setUsername(uiCredentials.Username); // store host URL here
                     TableauWrapper.setUsernameAlias(uiCredentials.Username);
                     TableauWrapper.setPassword(uiCredentials.Password);
                 }
@@ -122,18 +122,12 @@ function performAuthentication(): Promise<void> {
 }
 
 function buildWdc(): tableau.WebDataConnector {
-    // const connector: tableau.WebDataConnector = TableauWrapper.makeConnector();
-    // connector.init = init;
-    // connector.getSchema = getSchema;
-    // connector.getData = getData;
-    // connector.shutdown = shutdown;
-    // return connector;
-    return {
-        init,
-        getSchema,
-        getData,
-        shutdown
-    };
+    const connector: tableau.WebDataConnector = TableauWrapper.makeConnector();
+    connector.init = init;
+    connector.getSchema = getSchema;
+    connector.getData = getData;
+    connector.shutdown = shutdown;
+    return connector;
 }
     
 function finish(): Promise<void> {
@@ -141,14 +135,10 @@ function finish(): Promise<void> {
 
     return Promise.resolve()
         .then(() => !TableauWrapper.isAuthenticated() ? performAuthentication() : Promise.resolve())
-        .then(() => { 
-            TableauWrapper.submit();
-            return Promise.resolve();
-        })
+        .then(() => TableauWrapper.submit())
         .catch((e: any) => {
             // TODO: proper handling
-            TableauWrapper.log(`ERROR: ${e}`);
-            console.log(e);
+            HtmlUtils.showModal(e);
         });
 }
 
