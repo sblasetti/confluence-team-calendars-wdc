@@ -23,7 +23,11 @@ module.exports = {
     new CopyWebpackPlugin([
       { 
         from:'./src/index.html'
-      } 
+      },
+      { 
+        from:'./src/vendors/',
+        to: 'vendors/'
+      }
 ])
   ],
   node: {

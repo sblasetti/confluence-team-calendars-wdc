@@ -1,8 +1,8 @@
 import * as HtmlUtils from './utils/HtmlUtils';
-import * as Wdc from './Wdc';
 import * as TableauWrapper from './wrappers/TableauWrapper';
 import 'whatwg-fetch';
 import Promise from 'promise-polyfill';
+import Wdc from './Wdc';
 
 // To add to window
 if (!window.Promise) {

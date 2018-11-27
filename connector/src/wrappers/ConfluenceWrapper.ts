@@ -46,8 +46,6 @@ export function validateCredentials(options: IValidateCredentialsRequest): Promi
     const validateCredentialsUrl: string = 'http://localhost:8008/auth/validate';
     const validateCredentialsOptions: RequestInit = {
         headers: {
-            'Authorization': buildAuthHeaderValue(options.Credentials),
-            'Accept': 'application/json',
             'Content-Type': 'application/json'
         },
         method: 'POST',
@@ -63,17 +61,18 @@ export function validateCredentials(options: IValidateCredentialsRequest): Promi
     }
 
     function buildOutput(data: any): Promise<IValidateCredentialsResponse> {
-        // TODO: add some kind of mapper?
-        return Promise.resolve({
+        const obj: any = {
             valid: _.get(data, 'valid', false),
             error: _.get(data, 'error')
-        });
+        };
+        // TODO: add some kind of mapper?
+        return Promise.resolve(obj);
     }
 
-    function handleResponse<T>(res: Response): Promise<any> {
+    function handleResponse(res: Response): Promise<any> {
         if (_.get(res, 'status') === 200) {
-            // TODO: handle error
-            return res.json<T>();
+            const newLocal: any = res.json();
+            return newLocal;
         }
         throw new Error('An error occurred. Please try again.');
     }

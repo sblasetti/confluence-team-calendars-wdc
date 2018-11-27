@@ -1,4 +1,4 @@
 interface IValidateCredentialsResponse {
-    valid: boolean,
-    error: string
+    valid: boolean;
+    error: string;
 }

@@ -175,5 +175,6 @@ declare module tableau {
     var connectionData: any;
     var locale: string;
     var username: string;
+    var usernameAlias: string;
     var password: any;
 }
