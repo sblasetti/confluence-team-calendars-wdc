@@ -10,7 +10,7 @@ const port: number = 8008;
 app.use(express.json());
 
 app.use(function (req: Request, res: Response, next: NextFunction) {
-    console.log(req.url);
+    console.log(`${req.method} ${req.url}`);
     next();
 });
 

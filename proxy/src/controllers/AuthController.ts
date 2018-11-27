@@ -26,7 +26,7 @@ router.post('/validate', (req: Request, res: Response) => {
             }
 
             const user = _.get(body, 'username');
-            res.send({valid:  user && user === options.Credentials.Username});
+            res.send({valid: user && user === options.Credentials.Username});
         })
         .catch((error) => {
             res.send({
