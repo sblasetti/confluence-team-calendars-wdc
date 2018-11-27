@@ -22,9 +22,6 @@ describe('ConfluenceWrapper should use the Confluence API correctly', () => {
     // });
 
     it('validateCredentials() requests one space from the API', () => {
-        // Given
-        const { HostUrl } = mockValidateCredentialsRequest;
-
         // When
         validateCredentials(mockValidateCredentialsRequest);
 
@@ -38,6 +35,8 @@ describe('ConfluenceWrapper should use the Confluence API correctly', () => {
         expect(typeof secondArgument).toBe('object'); // second argument type
         expect(firstArgument).toBe('http://localhost:8008/auth/validate'); // first argument is the URL
         expect(secondArgument).toHaveProperty('headers'); // second argument is the headers
-        expect(secondArgument.headers).toHaveProperty('Authorization'); // headers have credentials
+        expect(secondArgument.headers).toMatchObject({ 
+            'Content-Type': 'application/json' // headers to have content type
+        });
     });
 });
