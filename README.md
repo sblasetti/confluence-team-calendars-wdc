@@ -13,13 +13,22 @@ There is a third folder called *shared* which contains resources used in both pr
 npm install
 npm run init
 ```
-2. Under the *connector* folder, run the following scripts to install dependencies for the connector project and to build the connector.
+2. Under the *connector* folder, run the following scripts to install dependencies for the connector project and to build the connector:
 ```javascript
 npm install
 npm run build
 ```
-2. Under the *proxy* folder, run the following scripts (same as for the connector).
+2. Under the *proxy* folder, run the following scripts (same as for the connector):
 ```javascript
 npm install
 npm run build
 ```
+3. There is a *fake-api* folder. Use this app to fake a confluence API and play with the responses. It uses the same scripts as both the connector and the proxy:
+```javascript
+npm install
+npm run build
+```
+## Connector lifecycle
+This information is based on the official documentation available [here](http://tableau.github.io/webdataconnector/docs/wdc_phases).
+
+![Connector lifecycle](./docs/WebDataConnector-Phases.png "Connector lifecycle")
