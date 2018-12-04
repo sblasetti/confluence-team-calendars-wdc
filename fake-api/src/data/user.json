@@ -1,0 +1,17 @@
+{
+    "type":"known",
+    "username":"test",
+    "userKey":"1234567890a1234567890a1234567890a",
+    "profilePicture":{
+       "path":"/download/attachments/12345678/user-avatar",
+       "width":48,
+       "height":48,
+       "isDefault":false
+    },
+    "displayName":"Test User",
+    "_links":{
+       "base":"https://HOST",
+       "context":"",
+       "self":"https://HOST/rest/experimental/user?key=1234567890a1234567890a1234567890a"
+    }
+ }
