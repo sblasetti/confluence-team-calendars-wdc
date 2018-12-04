@@ -1,4 +1,6 @@
 import express from 'express';
+import { LogMiddleware } from './middlewares/LogMiddleware';
+import { CorsMiddleware } from './middlewares/CorsMiddleware';
 import * as userJson from './data/user.json';
 import * as eventsJson from './data/events.json';
 
@@ -7,11 +9,8 @@ const port: number = 3005;
 
 // Middlewares
 app.use(express.json());
-
-app.use(function (req: express.Request, res: express.Response, next: express.NextFunction) {
-    console.log(`${req.method} ${req.url}`);
-    next();
-});
+app.use(CorsMiddleware());
+app.use(LogMiddleware());
 
 // Fake method to retrieve user information
 app.get('/rest/api/user', (req: express.Request, res: express.Response) => {
