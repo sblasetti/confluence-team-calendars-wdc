@@ -7,7 +7,7 @@ import * as UIHelper from './utils/UIHelper';
 import * as HtmlUtils from './utils/HtmlUtils';
 import * as ConfluenceWrapper from './wrappers/ConfluenceWrapper';
 
-function buildEventsRequest(connectionData: IConnectionData): IEventsOptions {
+function buildEventsRequest(connectionData: IConnectionData): IGetEventsRequest {
     return {
         Credentials: {
             Username: TableauWrapper.getUsername(),

@@ -1,4 +1,4 @@
-interface IEventsOptions {
+interface IGetEventsRequest {
     Credentials: ICredentials;
     HostUrl: string;
     SubCalendarId: string;

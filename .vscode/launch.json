@@ -13,7 +13,7 @@
         {
             "type": "node",
             "request": "launch",
-            "name": "Jest Tests (All)",
+            "name": "Connector Jest Tests (All)",
             "program": "${workspaceRoot}/connector/node_modules/jest/bin/jest.js",
             "args": [
                 "-i",
@@ -24,11 +24,33 @@
         {
             "type": "node",
             "request": "launch",
-            "name": "Jest Tests (Current File)",
+            "name": "Connector Jest Tests (Current File)",
             "program": "${workspaceRoot}/connector/node_modules/jest/bin/jest.js",
             "args": [
                 "${relativeFile}",
                 "-c", "${workspaceRoot}/connector/jest.config.json"
+            ],
+            "internalConsoleOptions": "openOnSessionStart"
+        },
+        {
+            "type": "node",
+            "request": "launch",
+            "name": "Proxy Jest Tests (All)",
+            "program": "${workspaceRoot}/proxy/node_modules/jest/bin/jest.js",
+            "args": [
+                "-i",
+                "-c", "${workspaceRoot}/proxy/jest.config.json"
+            ],
+            "internalConsoleOptions": "openOnSessionStart"
+        },
+        {
+            "type": "node",
+            "request": "launch",
+            "name": "Proxy Jest Tests (Current File)",
+            "program": "${workspaceRoot}/proxy/node_modules/jest/bin/jest.js",
+            "args": [
+                "${relativeFile}",
+                "-c", "${workspaceRoot}/proxy/jest.config.json"
             ],
             "internalConsoleOptions": "openOnSessionStart"
         }   

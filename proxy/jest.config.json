@@ -1,0 +1,22 @@
+{
+    "transform": {
+        "^.+\\.tsx?$": "ts-jest"
+    },
+    "collectCoverage": false,
+    "collectCoverageFrom": [
+        "src/**/*.{ts,tsx}",
+        "!**/*.d.ts"
+    ],
+    "testRegex": "(/src/.*\\.test)\\.(tsx?)$",
+    "moduleFileExtensions": [
+        "ts",
+        "tsx",
+        "js",
+        "jsx",
+        "json",
+        "node"
+    ],
+    "setupFiles": [
+        "./jest.setup.js"
+    ]
+}

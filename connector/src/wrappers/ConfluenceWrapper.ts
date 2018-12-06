@@ -2,11 +2,15 @@ import * as FormatUtils from '../utils/FormatUtils';
 import 'whatwg-fetch';
 import _ from 'lodash';
 
-export function getEvents(options: IEventsOptions): Promise<any[]> {
+/**
+ * 
+ * @param {IGetEventsRequest} options
+ */
+export function getEvents(options: IGetEventsRequest): Promise<any[]> {
     // TODO: input data
     const startDate: string = FormatUtils.toNoMilliISOString(options.StartDate);
     const endDate: string = FormatUtils.toNoMilliISOString(options.EndDate);
-    const eventsUrl: string = `${options.HostUrl}/rest/calendar-services/1.0/calendar/events.json?subCalendarId=${options.SubCalendarId}&start=${startDate}&end=${endDate}`;
+    const eventsUrl: string = 'http://localhost:8008/data/search';
     const eventsOptions: RequestInit = {
         headers: {
             Authorization: buildAuthHeaderValue(options.Credentials)
@@ -35,12 +39,8 @@ export function getEvents(options: IEventsOptions): Promise<any[]> {
 }
 
 /**
- * This method makes a request to retrieve a single space. As the API does always 
- * return HTTP 200 statuses, the way to validate credentials is to check if the 
- * response contains one space.
- * @param options Information required to perform the request.
- * @param onResponseCallback Callback function for a successful response.
- * @param onErrorCallback Callback function for an error.
+ * Retrieve the user profile (if valid).
+ * @param {IValidateCredentialsRequest} options Information required to perform the request.
  */
 export function validateCredentials(options: IValidateCredentialsRequest): Promise<IValidateCredentialsResponse> {
     const validateCredentialsUrl: string = 'http://localhost:8008/auth/validate';
